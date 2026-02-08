@@ -4,11 +4,17 @@ import { prisma } from "./prisma";
 export const getAverageScoreForUser = async (
   userId: number,
 ): Promise<number> => {
-  const result = await prisma.starRating.aggregate({
+  const ratings = await prisma.starRating.findMany({
     where: { userId },
-    _avg: { score: true },
+    select: { score: true },
   });
 
-  const avg = result._avg ?? 0;
-  return Number(avg.toFixed(4));
+  if (ratings.length === 0) return 0;
+
+  const total = ratings.reduce((sum, r) => sum + r.score, 0);
+  const avg = total / ratings.length;
+
+  const truncated = Math.trunc(avg * 10000) / 10000;
+
+  return Number(truncated.toFixed(4));
 };
