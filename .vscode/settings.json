@@ -11,5 +11,6 @@
         "rachels",
         "superjon",
         "Uzumaki"
-    ]
+    ],
+    "prisma.pinToPrisma6": true
 }
